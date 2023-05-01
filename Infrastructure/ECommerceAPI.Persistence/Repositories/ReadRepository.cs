@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -29,7 +30,8 @@ namespace ECommerceAPI.Persistence.Repositories
             => await Table.FirstOrDefaultAsync(predicate);
 
         public async Task<EntityT> GetByIdAsync(string id)
-            =>await Table.FirstOrDefaultAsync(data => data.Id == Guid.Parse(id));
+            //=>await Table.FirstOrDefaultAsync(data => data.Id == Guid.Parse(id));
+            => await Table.FindAsync(Guid.Parse(id));
 
     }
 }

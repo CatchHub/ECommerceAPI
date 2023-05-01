@@ -1,4 +1,5 @@
 ﻿using ECommerceAPI.Application.Repositories;
+using ECommerceAPI.Domain.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,15 +10,15 @@ namespace ECommerceAPI.API.Controllers
     public class ProductsController : ControllerBase
     {
         readonly private IProductWriteRepository _productWriteRepository;
-        readonly private IProductWriteRepository _productReadRepository;
+        readonly private IProductReadRepository _productReadRepository;
 
-        public ProductsController(IProductWriteRepository productWriteRepository, IProductWriteRepository productReadRepository)
+        public ProductsController(IProductWriteRepository productWriteRepository, IProductReadRepository productReadRepository)
         {
             _productWriteRepository = productWriteRepository;
             _productReadRepository = productReadRepository;
         }
         [HttpGet]
-        public async void Get()
+        public async Task Get()
         {
             // It's just an example created to check if the repository design pattern which i build works.
             await _productWriteRepository.AddRangeAsync(new()
@@ -27,6 +28,13 @@ namespace ECommerceAPI.API.Controllers
                 new() { Id = Guid.NewGuid(),Name = "Product 3" , CreatedDate = DateTime.UtcNow,Price=300,Stock=30},
             });
             var count = await _productWriteRepository.SaveAsync();
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get(string id)
+        {
+            Product product = await this._productReadRepository.GetByIdAsync(id);
+            return Ok(product);
         }
     }
 }

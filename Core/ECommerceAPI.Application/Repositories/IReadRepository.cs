@@ -10,13 +10,13 @@ namespace ECommerceAPI.Application.Repositories
 {
     public interface IReadRepository<EntityT> : IRepository<EntityT> where EntityT : BaseEntity
     {
-        IQueryable<EntityT> GetAll();
+        IQueryable<EntityT> GetAll(bool tracking = true);
 
-        IQueryable<EntityT> GetWhere(Expression<Func<EntityT, bool>> predicate);
+        IQueryable<EntityT> GetWhere(Expression<Func<EntityT, bool>> predicate, bool tracking = true);
 
-        Task<EntityT> GetSingleAsync(Expression<Func<EntityT, bool>> predicate);
+        Task<EntityT> GetSingleAsync(Expression<Func<EntityT, bool>> predicate, bool tracking = true);
 
-        Task<EntityT> GetByIdAsync(string id);
+        Task<EntityT> GetByIdAsync(string id, bool tracking = true);
 
     }
 }

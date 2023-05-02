@@ -2,6 +2,7 @@
 using ECommerceAPI.Domain.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Runtime.InteropServices;
 
 namespace ECommerceAPI.API.Controllers
 {
@@ -21,12 +22,17 @@ namespace ECommerceAPI.API.Controllers
         public async Task Get()
         {
             // It's just an example created to check if the repository design pattern which i build works.
-            await _productWriteRepository.AddRangeAsync(new()
-            {
-                new() { Id = Guid.NewGuid(),Name = "Product 1" , CreatedDate = DateTime.UtcNow,Price=100,Stock=10},
-                new() { Id = Guid.NewGuid(),Name = "Product 2" , CreatedDate = DateTime.UtcNow,Price=200,Stock=20},
-                new() { Id = Guid.NewGuid(),Name = "Product 3" , CreatedDate = DateTime.UtcNow,Price=300,Stock=30},
-            });
+            //await _productWriteRepository.AddRangeAsync(new()
+            //{
+            //    new() { Id = Guid.NewGuid(),Name = "Product 1" , CreatedDate = DateTime.UtcNow,Price=100,Stock=10},
+            //    new() { Id = Guid.NewGuid(),Name = "Product 2" , CreatedDate = DateTime.UtcNow,Price=200,Stock=20},
+            //    new() { Id = Guid.NewGuid(),Name = "Product 3" , CreatedDate = DateTime.UtcNow,Price=300,Stock=30},
+            //});
+            Product p1 = await _productReadRepository.GetByIdAsync("0d8fb717-e585-4432-a6b8-745f0e24795d");// product 3 
+            p1.Name = "Sample";            
+            Product p2 = await _productReadRepository.GetByIdAsync("63661482-d19e-4f8d-ba0e-1481992ccd3e", false);// product 2 
+            p2.Name = "Sample";
+            await _productWriteRepository.SaveAsync();
             var count = await _productWriteRepository.SaveAsync();
         }
 

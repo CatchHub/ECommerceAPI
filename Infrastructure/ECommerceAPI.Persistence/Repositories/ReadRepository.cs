@@ -22,16 +22,42 @@ namespace ECommerceAPI.Persistence.Repositories
 
         public DbSet<EntityT> Table => _context.Set<EntityT>();
 
-        public IQueryable<EntityT> GetAll() => Table;
+        public IQueryable<EntityT> GetAll(bool tracking = true)
+        {
+            var query = Table.AsQueryable();
+            if(!tracking)
+                query = query.AsNoTracking(); 
+            return query;
+        }
     
-        public IQueryable<EntityT> GetWhere(System.Linq.Expressions.Expression<Func<EntityT, bool>> predicate)
-            => Table.Where(predicate);
-        public async Task<EntityT> GetSingleAsync(System.Linq.Expressions.Expression<Func<EntityT, bool>> predicate)
-            => await Table.FirstOrDefaultAsync(predicate);
+        public IQueryable<EntityT> GetWhere(System.Linq.Expressions.Expression<Func<EntityT, bool>> predicate, bool tracking = true)
+        {
+            var query = Table.Where(predicate);
+            if(!tracking)
+                query = query.AsNoTracking();
+            return query;
 
-        public async Task<EntityT> GetByIdAsync(string id)
-            //=>await Table.FirstOrDefaultAsync(data => data.Id == Guid.Parse(id));
-            => await Table.FindAsync(Guid.Parse(id));
+        }
+        public async Task<EntityT> GetSingleAsync(System.Linq.Expressions.Expression<Func<EntityT, bool>> predicate, bool tracking = true)
+        {
+            var query = Table.AsQueryable();
+            if (!tracking)
+                query = Table.AsNoTracking();
+            return await query.FirstOrDefaultAsync(predicate);
+
+        }
+
+        public async Task<EntityT> GetByIdAsync(string id, bool tracking = true)
+        //=>await Table.FirstOrDefaultAsync(data => data.Id == Guid.Parse(id));
+        //=> await Table.FindAsync(Guid.Parse(id));
+        {
+            var query = Table.AsQueryable();
+            if (!tracking)
+                query = Table.AsNoTracking();
+            return await query.FirstOrDefaultAsync(data=>data.Id ==Guid.Parse(id));
+
+        }
 
     }
 }
+ 
